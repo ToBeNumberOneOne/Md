@@ -457,6 +457,79 @@ $ git tag -l "v1.8*"
 `$ GIT TAG -A v1.2 9FCEB02`
 
 
+# Git 分支
+
+Git分支的本质上其实是指向提交对象的指针。 默认的分支名是master, master分支会在每次自动提交时向前移动。
+
+![分支](/GitProNotes/files/imgs/分支.png)
+
+### 分支的创建
+
+`$ git branch testing`
+
+**Head**指针，指向当前所在的本地分支。 git branch 命令仅仅是创建一个指针，并不会自动切换到新的分支中去。
+
+可以使用git log指令查看当前各个分支所指的对象
+
+`$ git log --oneline --decorate`
+
+### 分支切换
+
+`$ git checkout testing`
+
+注意：分支切换同时也会改变工作目录中的文件，如果是切换到一个旧的分支，工作目录会回复到该分支最后一次提交时的样子，当Git不能干净利落完成这个任务，它将禁止切换分支。
+
+你可以在不同的分支间不断来回切换和工作，并在时机成熟时将他们合并起来。
+
+可以使用git log命令查看分叉历史
+
+`$ git log --oneline --decorate --graph --all`
+
+通常我们会在创建一个新的分支后立马切换过去，可以使用git checkout -b newbranchname
+
+### 分支的合并
+
+`$ git merge issue53`
+
+在合并之后不再需要的分支可以删除，使得git提交历史更加简洁
+
+`$ git branch -d iss53`
+
+**遇到冲突分支合并**
+
+如果在不同的分支中对同一个文件的同一部分进行了不同的修改，在合并时就会产生冲突。
+
+此时，git做了合并的操作，但是没有自动创建一个新的合并提交，git会暂停下来，等待冲突解决，可以在合并后的任意时刻使用`git status`命令来查看那些因包含合并冲突而处于未合并状态（emerged）状态的文件。
+
+在确认之前有冲突的文件都已经暂存后，可以使用git commit来完成合并并提交。
+
+### 分支管理 
+
+常用的分支管理命令：
+
+$ git branch  得到当前所有分支的列表 * 所指即当前所在的分支
+
+$ git branch -v 查看每一个分支的最后一次提交
+
+$ git branch --mergerd 过滤列表中已经合并到当前分支的分支
+
+$ git branch --no-mergerd 过滤列表中未合并到当前分支的分支
+
+$ git branch -d testing 删除分支
+
+如果包含了还未合并的工作但是仍然想要删除分支并丢掉那些工作
+
+$ git branch -D testing  强制删除
+
+### 分支开发工作流
+
+长期分支
+![Alt text](/GitProNotes//files//imgs/长期分支.png)
+
+主题分支
+![Alt text](/GitProNotes//files//imgs/主题分支.png)
+
+### 远程分支
 
 
 
