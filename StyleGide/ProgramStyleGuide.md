@@ -1,118 +1,3 @@
-# Formatting
-
-## Comments
-
-- inline comments (//) should be preferred to block comments (/* */)  
-- Comment delimiters should be separated from the body of the comment by spaces
-- Use a commented **line of dashes or equals signs** to separate one section of code
-
-```
-// Prefer inline comments
-
-/* Not block comments */
-
-// Make sure there is a space after your delimiter
-
-// If you want to make a section heading, do it like this
-//--------------------------------------------------------
-
-// Or like this
-//=============================
-
-// You can use your judgement to decide when to wrap
-// comments and how long to make your heading lines
-
-```
-
-**Notice**
-1. Task comments: Include author and copyright information, a brief description of the task's functionality, version number, and a record of changes and upgrades.  
-2. Variable comments: Comments are required at all variable. declarations.
-3. Summarizing comments: Introducing a piece of code. Placed at the top of the code.
-4. General Comments: Introduces the meaning of the code. Especially critical places need to be annotated
-
-## Variables
-
-**Declarations & Prefixes**
-
-- All variable names should be in lower camel case
-- Variable names may contain an informative prefix
-- Variables declared in a .var file should only have initial values specified if they are non-zero
-
-```
-myLocalVariable		 // variables are lower camel case
-or
-ActPressure / actPressure
-
-gActPressure        // Global variables start with g
-
-pMyPointer          // Pointers start with p
-
-dMyDynamicVar		// Dynamic variables start with d
-
-diMyDigitalInput    // Digital inputs start with di (similarly, do, ai, ao)
-```
-
-**Constant variables**
-
-Use uppercase letters, underline to enhance readability
-
-```
-common constant:
-HEAT_TIME
-
-step constant:
-STEP_INIT
-```
-
-**Type declaration**
-
-In Automation Studio, These declarations are within .typ files.  
-
-- **Type declarations should use upper camel case and end in _typ.**
-- The name of type cannot start with a number, character.
-- The length of variables, data types, functions and functionblocks is limited with 32 characters
-```
-// General type name
-MySubsystemIn_typ
-
-MySubsystemInPar_typ
-or
-MySubsystemPar_typ
-```
-
-**Notice**
-Variable declaration table: from top to bottom, invariant constants (e.g., TRUE FALSE), configuration constants (e.g., NB_AXIS), variables.
-
-# Subsystem structures
-
-- Each subsystem or task should be able to function on its own. it should contain the commands required to request actions and give proper responses. most subsystems have stuctures for accepting command/parametters, internally processing, and output statuses
-
-- Members of a structure should be big camel case and desciptive  
-
-- Subsystems should not nest other subsystems in their structures, include axes
-
-Subsystems typically adhere to the follow structure.(full word is also acceptable)
-
-- Subsystem
-    - In
-        - Cmd
-        - Par
-        - Cfg
-    - Io
-        - DiMyInput
-        - DoMyOutput
-    - Out
-        - Done
-        - Busy
-        - Error
-        - ErrorId
-        - ErrorString
-    - Internal
-        - fub *optional*
-        - cmd *optional*
-
-
-
 # Coding Guidelines 
 
 **from PLCopen Promotional Committee Training** [Download](https://www.plcopen.org/system/files/downloads/plcopen_coding_guidelines_version_1.0.pdf)
@@ -178,7 +63,7 @@ The following guidelines are proposed:
 
 ---
 
-#### Rule N9 : *Different element types should not bear the same name*
+### Rule N9 : *Different element types should not bear the same name*
 - make code difficult to read even if compilation is possible
 
 - **Guideline**: Do not use identical names for any tasks programs, functions and function blocks, variables, UDTs and name spaces.
@@ -259,31 +144,81 @@ the code was bypassed may be used. In such case, the code section should be smal
 ---
 ### Rule CP3: **All Variables should be initialized before being used**
 
+- **Exceptions**:
+    - If the PLC initializes explicitly variables to 0, and if this variable should be initialized to 0, it is not required to explicitly initialize the variables to zero. However this can affect portability of the code.
+    - Variables that have RETAIN attribute will automatically have their values initialized to their retained upon power reset.
+    - Variables that are linked to physical inputs do not need to be initialized
 
 ---
 ### Rule CP4: **Driect addressing should not overlap**
 ---
 ### Rule CP5: **Applications shall be well designed**
+
+Related: Rule CP15 and Rule CP26
+
+- **Guideline**:
+    - Applications must be well designed
+    - Make use of Arrays (where supported) to aggregate related variables of the same data type
+    - Make use of Structures (where supported) to aggregate related variables of different data types
+    - Make use of Classes where supported or Functions and Function Blocks to reduce complexity of large areas into smaller parts
+    - Make use of Classes where supported, or Functions and Function Blocks to reuse common code
+    - Make use of PRIVATE variables in Classes where supported, or Function Block internal variables to encapsulate data
+    - Design separate programs to use the best language for the job: Ladder, Structured Text, Sequential Function Chart or Function Block Diagram (where supported)
+
+- **Exceptions**: Accessing system-defined variables or VAR_GLOBAL CONSTANT may require the use of external references
+
 ---
 ### Rule CP6: **Avoid external variables in functions, function blocks and classes**
+
+- **Guideline**:
+    - Functions, Function Blocks and Classes **should not use external variables**.
+    - A good alternative to using external references to global variables can be to extend the parameter list, and pass the variables needed for access.
 ---
 ### Rule CP7: **Error information shall be tested**
+
+- **Guideline**:  After a call to a function returning error information, the returned error information should be tested and eventually the behavior of the process should be changed in case of error.
+
 ---
 ### Rule CP8: **Floating point comparision shall not be equality or inequality**
+
+- **Guideline**: comparison between floating point variables must use only the following operators: strict less than (<), less than or equal (<=), strict greater than (>), greater than or equal (>=).
+
+- Many numbers cannot be represented exactly in floating point notation: number 0.1 is represented by a binary value that corresponds to decimal 0.100000001490116119384765625 in 24bits single precision
 ---
 ### Rule CP9: **Time and physical measures comparison shall not be equality or inequlity**
+
+- **Guideline**: Comparison between time information or physical measures must use only the following operators: strict less than (<), less than or equal (<=), strict greater than (>), greater than or equal (>=).
+
+- **Reasoning**: The equality operator requires a strict equality between operands. When using time information or physical measure, this equality may not be met and the inequality is almost alwaysmet.
 ---
 ### Rule CP10: **Limit the comlexity of POU code**
+
+- **Guideline**: If the code of a POU exceeds some complexity level, the code should be split up into several POUs.
+
+- **Reasoning**: Complex code is difficult to maintain and a source of errors.
 ---
 ### Rule CP11: **Avoid multiple writes from multiple tasks**
+
+- **Guideline**: When sharing variables among tasks you must avoid writing to a variable from more than one task. When using communication variables between two tasks, it is important to decide which task writes which variables so that a given variable is not written from the two different tasks.
+
 ---
 ### Rule CP12: **Manage synchronization among tasks**
 ---
 ### Rule CP13: **Physical output should be writen once per PLC cycle**
 ---
 ### Rule CP14: **POUs shall not call themselfves directly or indirectly**
+
+- **Guideline**: A recursive algorithm should be replaced by an iterative algorithm.
+
+- **Reasoning**: Recursive algorithms normally consume stack space for each call so deep recursion can cause system failure, even if unplanned. Support for recursive calls of POU is vender-specific so using it also makes the program less portable
+
 ---
 ### Rule CP15: **POUs shall have a single point of exit**
+
+- **Guideline**: POU structure should be changed to avoid the usage of RETURN instruction before the end of the code. If programming language is Structured Text, conditional instructions should be used for the other languages, use a label at the end of the POU and use JUMP instruction to jump to this last label.
+
+- **Reasoning**: Testability, Readability and maintainability are good reasons to do that. In case of debugging, it is possible to add some code just before returning the POU and we got this information in all cases.
+
 ---
 ### Rule CP16: **Read a variable writtten by anoyher task only once per cycle**
 ---
