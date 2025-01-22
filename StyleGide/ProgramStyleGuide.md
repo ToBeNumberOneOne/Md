@@ -113,7 +113,7 @@ The following guidelines are proposed:
 
 ### Rule C6 : *Define comments language* :
 
-- Use English as the comments languase
+- Use English as the comments language
 
 ---
 
@@ -191,7 +191,7 @@ Related: Rule CP15 and Rule CP26
 
 - **Reasoning**: The equality operator requires a strict equality between operands. When using time information or physical measure, this equality may not be met and the inequality is almost alwaysmet.
 ---
-### Rule CP10: **Limit the comlexity of POU code**
+### Rule CP10: **Limit the complexity of POU code**
 
 - **Guideline**: If the code of a POU exceeds some complexity level, the code should be split up into several POUs.
 

@@ -6,8 +6,8 @@
 ![碎片化寻址](/Tia/image/image.png)
 
 ### 大小端数据在数据解析时存在的问题
-![alt text](image.png)
 
+![alt text](image.png)
 ## 配方管理
 
 ### **导出配方** RecipeExport
@@ -20,3 +20,10 @@
 数据块的名称将用作所创建的CSV的名称，如果已存在同名文件则覆盖已有文件。
 
 配方数据块类型中记录最大为5000个字节。 1200系列也会监控列数，最大255，索引列不计数。
+
+https://www.dmcinfo.com/latest-thinking/blog/id/8862/troubleshooting-your-siemens-simatic-s7-1200-timers
+
+![alt text](image-1.png)
+
+
+Simatic AX : KRZ7VJA1PEMNN2YASUE23ABR
