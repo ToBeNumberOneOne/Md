@@ -110,7 +110,9 @@ shell函数和脚本的区别
 
 
 ### shell工具
-- [Linux指令帮助搜索](https://tldr.inbrowser.app/pages/common/rm)
+- [Linux指令帮助搜索](https://tldr.inbrowser.app/pages/common/rm) 
+  
+  man  tldr
 
 - find指令
     * `find . -name src -type d` 查找当前目录及其子目录中的src目录
@@ -139,6 +141,21 @@ shell函数和脚本的区别
 ```
 
 - 查找shell命令 history `Ctrl + R` 
+- 终端多路复用 [Tmux](https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/)
+
+## 正则表达式
+
+## Vim
+
+使用dd删除行时，可以使用p 在当前光标下面粘贴文本 P在光标上
+
+:registers 命令可以查看寄存器内容
+
+2p 从指定寄存器粘贴内容
+
+## Cmake
+
+make clean 清除编译文件 /build
 
 ## 包管理 
 
@@ -153,6 +170,17 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple onnxruntime opencv-pytho
 
 
 ## 文件管理
+
+### 压缩文件
+
+- 解压.tar.bz2文件  (bzip2) 
+  
+  `tar -xjf filename.tar.bz2 -C /path`
+    - x 提取 extract c 创建 create
+    - j 使用 bzip2解压
+    - f 指定要处理的文件
+    - C 指定解压的目标路径
+
 
 ### SSH
 
