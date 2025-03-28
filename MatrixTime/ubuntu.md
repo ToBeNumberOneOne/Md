@@ -114,6 +114,17 @@ shell函数和脚本的区别
   
   man  tldr
 
+Man page Section
+1.	用户命令，例如ls(1)
+2.	系统调用，例如_exit(2)
+3.	库函数，例如printf(3)
+4.	特殊文件，例如null(4)描述了设备文件/dev/null、/dev/zero的作用
+5.	系统配置文件的格式，例如passwd(5)描述了系统配置文件/etc/passwd的格式
+6.	游戏
+7.	其它杂项，例如bash-builtins(7)描述了bash的各种内建命令
+8.	系统管理命令，例如ifconfig(8)
+
+
 - find指令
     * `find . -name src -type d` 查找当前目录及其子目录中的src目录
     * -iname 不区分大小写
@@ -170,6 +181,13 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple onnxruntime opencv-pytho
 
 
 ## 文件管理
+
+- 磁盘空间分析工具 ncdu 
+```
+sudo ncdu -x /        -x只扫描当前文件系统，不考虑挂载到根目录下的不同文件系统的文件夹
+
+sudo ncdu --exclude /var /     --exclude 排除的文件夹路径
+```
 
 ### 压缩文件
 

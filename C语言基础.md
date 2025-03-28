@@ -4,6 +4,8 @@
 
 -g 生成的执行文件可以用gdb进行源码级调试
 
+- gcc -E x选项可以看到预处理之后编译之前的程序
+
 - layout src 进入文本图形模式（TUI mode），显示源代码窗口 退出 tui disable
 
 ### 常用的gdb指令
@@ -36,7 +38,7 @@
 - watch 设置观察点 info watchpoints 查看观察点
 
 ---
-# makefile基本规则
+# makefile
 
 
 
@@ -99,16 +101,128 @@ OUTPUT_OPTION = -o $@
 CC = cc
 
 # default
-COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+COMPILE.c = $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c # cc    -c
 
-%.o: %.c
+%.o: %.c # 模式规则 pattern rule
 #  commands to execute (built-in):
         $(COMPILE.c) $(OUTPUT_OPTION) $<
+
+main.o: main.c
+	cc    -c -o main.o main.c
+
 ```
 
 '#'在makefile中表示单行注释
 
-$@ 取值为规则中的目标
+cc是一个符号链接，通常指向gcc
 
-$< 规则中的第一个条件
+ccp 标识C preprocessor 预处理
 
+- $@ 取值为规则中的目标
+
+- $< 规则中的第一个条件
+  
+- $? 规则中比目标新的条件组成的列表
+  
+- $^ 规则中的所有条件组成的列表
+
+```
+main.o: main.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+```
+
+### 常用变量
+
+- AR 静态库打包命令的名字，缺省值是ar。
+- ARFLAGS 静态库打包命令的选项，缺省值是rv。
+- S 汇编器的名字，缺省值是as。
+- ASFLAGS 汇编器的选项，没有定义。
+- CC C编译器的名字，缺省值是cc。
+- CFLAGS C编译器的选项，没有定义。
+- CXX C++编译器的名字，缺省值是g++。
+- CXXFLAGS C++编译器的选项，没有定义。
+- CPP C预处理器的名字，缺省值是$(CC) -E。
+- CPPFLAGS C预处理器的选项，没有定义。
+- LD 链接器的名字，缺省值是ld。
+- LDFLAGS 链接器的选项，没有定义。
+- TARGET_ARCH 和目标平台相关的命令行选项，没有定义。
+- OUTPUT_OPTION 输出的命令行选项，缺省值是-o $@。
+- LINK.o 把.o文件链接在一起的命令行，缺省值是$(CC) $(LDFLAGS) $(TARGET_ARCH)。
+- LINK.c 把.c文件链接在一起的命令行，缺省值是$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)。
+- LINK.cc 把.cc文件（C++源文件）链接在一起的命令行，缺省值是$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(TARGET_ARCH)。
+- COMPILE.c 编译.c文件的命令行，缺省值是$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c。
+- COMPILE.cc 编译.cc文件的命令行，缺省值是$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c。
+- RM 删除命令的名字，缺省值是rm -f。
+
+### 处理头文件的依赖关系
+
+```
+$gcc -M main.c 自动生成目标文件和源文件的依赖关系（含系统头文件）
+
+$gcc -MM *.c 不含系统头文件
+
+all: main
+
+main: main.o stack.o maze.o
+	gcc $^ -o $@
+
+clean:
+	-rm main *.o
+
+.PHONY: clean
+
+sources = main.c stack.c maze.c
+
+include $(sources:.c=.d)
+
+%.d: %.c
+	set -e; rm -f $@; \
+	$(CC) -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+```
+
+### 常用make命令行选项
+
+- -n 打印要执行的命令，但不会真的执行
+- -C 切换另一个目录执行那个目录下的makefile
+- make CFLAG=-g 在命令行中修改选项而不是修改Makefule
+
+
+
+# 语法
+
+### static 
+
+- 修饰函数的作用域
+  - 限制在定义它的源文件内，在其他源文件中无法使用。 
+  - static函数一般用于实现一些辅助功能，这些功能只在当前源文件里有用，这样可以避免函数名冲突，增强代码的模块化和封装性。
+
+
+### const
+
+
+- 修饰变量时表示变量为只读，一旦初始化就无法修改
+
+### extern
+
+- 用于声明一个函数或者变量是在其他文件中定义的，以便能进行调用
+- c语言不允许嵌套定义函数，虽然可以在一个函数体声明另一个函数
+- 作用域，语句块也构成一个作用域，单独使用语句块通常是为了定义比函数的局部变量更“局部”的变量
+- %运算符的结果总与被除数同号
+
+----
+
+- 从语法上规定全局变量只能用常量表达式来初始化
+
+
+
+# 常用C标准库函数
+
+- getopt_long() 解析命令行参数，支持长选项--和短选项-
+  
+- int sscanf(const char *str, const char *format, ...);
+	- 从字符串中按照指定的格式读取数据，scanf是从标准输入（键盘）读取数据
+	- format是格式控制字符串，以%开头
+	- ... 是可变参数列表，用于接受读取到的数据
+	- optarg 全局变量，获取命令行选项的参数
