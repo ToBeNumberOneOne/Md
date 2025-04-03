@@ -176,9 +176,21 @@ make clean 清除编译文件 /build
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple onnxruntime opencv-python  指定源安装
 ```
 
+### dpkg
+```bash
+dpkg -l | grep vncserver # 查找安装软件及版本
+
+```
+
 ### conda
 
+常用指令
 
+- conda env list 列出环境
+- conda activate base 激活环境
+- conda env export --name my_env > environment.yml 导出环境
+- conda env create -f environment.yml 创建环境
+- conda remove --name my_env --all
 
 ## 文件管理
 
@@ -228,9 +240,11 @@ hostnamectl
 ```bash
 sudo systemctl restart gdm3
 
-vncserver -kill :1
+vncserver -kill :* # 停止vnc会话
 
-vncserver :2 -geometry 1400x900 -depth 24  -localhost no //开启服务
+vncserver -list # 查看vnc会话
+
+vncserver :2 -geometry 1920x1080 -depth 24  -localhost no /#开启服务
 ```
 
 # 控制器

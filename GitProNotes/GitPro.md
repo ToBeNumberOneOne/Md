@@ -1,13 +1,21 @@
+# Git 常用指令
+```bash
+
+--- 撤销修改等
+
+git checkout -- . 
+git restore .  # 放弃工作区的所有修改（未暂存文件）
+
+git checkout -- filename
+git restore filename # 放弃指定文件的修改
+
+git clean -fd # 强制 目录 永久删除未跟踪的文件
+
+git reset HEAD filename # 撤销暂存的文件
+
+```
+
 # Git入门
----
-
-##网络问题
-
-
-win中可以尝试以下命令刷新DNS缓存
-```
-ipconfig /flushdns 
-```
 
 **Git与其他版本控制系统的差异**
 

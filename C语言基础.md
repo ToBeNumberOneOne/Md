@@ -2,11 +2,19 @@
 
 # gdb
 
--g 生成的执行文件可以用gdb进行源码级调试
+-g 生成的执行文件可以用gdb进行源码级调试,还可以用objdump反汇编将c代码和汇编代码穿插显示 objdump -dS a.out
 
-- gcc -E x选项可以看到预处理之后编译之前的程序
+- gcc -v 可以了解详细的编译过程
+- gcc -S 生成汇编代码
+- gcc -c 生成目标文件
+- gcc -c main.c -Wall 输出编译过程中的警告信息
 
-- layout src 进入文本图形模式（TUI mode），显示源代码窗口 退出 tui disable
+- gcc -E x 选项可以看到预处理之后编译之前的程序
+
+都可以搭配`-o` 给输出的文件重新命名而不是gcc默认的文件名
+
+- layout src 进入文本图形模式（TUI mode），显示源代码窗口 退出 tui disable 或者 gdb tui 可执行文件
+  
 
 ### 常用的gdb指令
 
@@ -37,7 +45,30 @@
 - x/7b input 打印指定存储单元的内容 7b为7个字节
 - watch 设置观察点 info watchpoints 查看观察点
 
+汇编
+- disassemble 可以反汇编当前函数或指定函数
+- si 指令一条一条指令单步调试
+- info registers 显示所有寄存器的当前值
+- x/20 $esp 查看内存中从$esp地址开始的20个32位的数
+
 ---
+
+### ELF文件分析工具
+
+- 静态分析
+	- readelf -h 文件头 -l 程序头表 -s 符号表
+	- objdump -d 所有代码 -S 同时显示源代码和汇编代码 反汇编代码
+  
+- 动态分析
+  - ldd 查看动态依赖库及其加载路径
+  - gdb 调试工具，程序运行时进行动态分析
+
+
+
+### 便捷操作
+
+- 将终端输出到另外一个终端页面中 tty 获取当前终端路径 set inferior-tty /dev/pts/1
+
 # makefile
 
 
@@ -189,6 +220,21 @@ include $(sources:.c=.d)
 - make CFLAG=-g 在命令行中修改选项而不是修改Makefule
 
 
+# 编译相关
+
+汇编程序通常以.s文件名后缀
+
+使用汇编器as(assemblaer)可以将汇编程序中的助记符翻译成机器指令，生成目标文件*.o
+
+然后链接器ld(linker)将目标文件.o 链接成可执行文件，链接的作用是1 修改目标文件中的信息，对地址做重定位，2 把多个目标文件合并成一个可执行文件。
+
+```
+
+$ as hello.s -o hello.o
+
+$ ld hello.0 -o hello
+
+```
 
 # 语法
 
@@ -214,6 +260,8 @@ include $(sources:.c=.d)
 ----
 
 - 从语法上规定全局变量只能用常量表达式来初始化
+
+数据驱动编程 选择正确的数据结构来组织信息，控制流程和算法尚在其次。
 
 
 
