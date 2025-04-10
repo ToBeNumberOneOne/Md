@@ -238,6 +238,32 @@ $ ld hello.0 -o hello
 
 # 语法
 
+
+### typedef 关键字
+
+给类型取别名的关键字，提高代码的可读性
+```C
+
+typedef unsigned int uint;
+
+uint x = 10; //uint 是 unsigned int 的别名
+
+typedef struct{
+		int x;
+		int y;
+} Point;
+Point p1 = {1,2}；// 匿名结构体，只能用别名Point
+
+typedef struct ArrayList{
+		int *data;
+		int sizel
+}ArrayList;
+
+struct ArrayList list1;
+ArrayList list2;
+
+```
+
 ### static 
 
 - 修饰函数的作用域
