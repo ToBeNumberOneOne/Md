@@ -88,7 +88,8 @@ shell脚本中的特殊变量：
 
 在执行脚本时，时常需要提供形式类似的参数，bash可以使用通配globbing来轻松实现
 
-- 通配符 `?`匹配一个字符 `*`匹配任意个字符
+- 通配符 `?`匹配一个字符 `*`匹配任意个字符、
+- 通配符`[若干字符]`匹配方括号中的任意一个字符的一次出现
 - 花括号`{}` 有一系列的指令，其中包含一段公共子串时可以用于自动扩展，这在批量移动或转换文件时非常方便
 
 [shellcheck](https://github.com/koalaman/shellcheck)定位脚本中的错误
@@ -153,8 +154,6 @@ Man page Section
 
 - 查找shell命令 history `Ctrl + R` 
 - 终端多路复用 [Tmux](https://hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/)
-
-## 正则表达式
 
 ## Vim
 
