@@ -11,6 +11,19 @@
 
 - gcc -E x 选项可以看到预处理之后编译之前的程序
 
+linux系统中安装了多个版本的gcc g++编译工具，在版本间进行切换
+```bash
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 130
+
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 90
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 130
+
+sudo update-alternatives --config gcc
+
+```
+
 都可以搭配`-o` 给输出的文件重新命名而不是gcc默认的文件名
 
 - layout src 进入文本图形模式（TUI mode），显示源代码窗口 退出 tui disable 或者 gdb tui 可执行文件
