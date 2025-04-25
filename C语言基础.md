@@ -82,7 +82,8 @@ sudo update-alternatives --config gcc
 
 - 将终端输出到另外一个终端页面中 tty 获取当前终端路径 set inferior-tty /dev/pts/1
 
-# makefile
+
+# Makefile
 
 
 
@@ -174,6 +175,61 @@ ccp 标识C preprocessor 预处理
 main.o: main.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 ```
+
+### 条件判断
+```makefile
+
+ifeq ($(MAKECMDGOALS),) #MAKECMDGOALS 内置变量，命令行指定的目标列表
+  MAKECMDGOALS  = image
+  .DEFAULT_GOAL = image
+endif 
+
+```
+
+### 内建命令
+```makefile
+
+-include $(AM_HOME)/scripts/$(ARCH).mk #include用于包含其他makefile文件 -前缀表示即使失败也不报错
+
+
+
+```
+
+### 函数
+
+- 来自对PA实验中abstract-machine项目的Makefile的解读，帮助理解如何写Makefile
+
+```makefile
+
+$(findstring <find>, <in>) 在字符串 <in> 中查找 <find>，若找到则返回 <find>，否则返回空字符串。
+
+$(info ...) $(error ...) 将括号内的内容输出到标准输出, error会停止后续操作，构建过程失败
+
+$(wildcard pattern...) 展开一个或多个通配符模式，返回所有匹配这些模式的文件列表
+
+$(shell ...) 执行shell命令并将输出作为函数返回值
+
+$(notdir ...) 去除文件路径中的目录部分，只保留文件名 src/main.c -> main.c
+
+$(basename ...) 去除文件中的扩展名部分，main.c -> main
+
+$(filter ...，...) 从第二个参数中筛选出与第一个参数匹配的元素，若不存在结果为空字符串
+
+ $(subst <from>, <to>, <text>) 在 <text> 字符串里查找所有的 <from> 字符串，然后将其替换成 <to> 字符串，最后返回替换后的新字符串。
+
+$(word n, text) 从一个以空格分割的单词列表提取指定位置的单词，n超出则为空
+
+$(flavor SRCS，undefined) 检查SRCS变量是否已经定义
+
+$(abspath ...) 将路径转为绝对路径
+
+OBJS = $(addprefix $(DST_DIR)/, $(addsuffix .o, $(basename $(SRCS)))) 加前后缀 test/div -> build/riscv32-nemu/tests/div.o
+
+LIBS     := $(sort $(LIBS) am klib) := 立即求值 sort对传入字符串列表安装字母进行排序并去除重复元素
+
+$(join <lsit1>, <list2>) 将两个单词列表进行合并 list1 := a b c list2 := 1 2 3 -> a1 b2 c3
+```
+
 
 ### 常用变量
 
@@ -296,11 +352,51 @@ ArrayList list2;
 - 作用域，语句块也构成一个作用域，单独使用语句块通常是为了定义比函数的局部变量更“局部”的变量
 - %运算符的结果总与被除数同号
 
+***注意**
+
+使用extern声明替代include并不可取：
+
+1. 声明和定义不一定匹配，如果需要修改得改多个地方
+2. 可读性差，在源文件中声明了一个其他模块的函数但根本不知道它来自哪儿
+
+**建议**
+1. 良好的设计习惯避免头文件的混乱，保持头文件的职责单一，每个`.h`文件都是一个功能块的声明接口，不会膨胀。
+2. 只有在需要的时候才#include头文件
+
+3. 使用extern的场合
+	- 共享全局变量（不适合写进头文件的结构体或数组）
+	- 声明不适合放在头文件中的变量
+  
+  ```C
+  // iringbuf.c
+ItraceEntry ringbuf[IRINGBUF_LEN];
+
+// some_other.c
+extern ItraceEntry ringbuf[];
+
+extern int nemu_state; 只在少数几个地方使用、不适合暴露给所有模块的变量
+  ```
+   
 ----
 
 - 从语法上规定全局变量只能用常量表达式来初始化
 
 数据驱动编程 选择正确的数据结构来组织信息，控制流程和算法尚在其次。
+
+### volatile 
+
+避免编译器对变量做缓存优化，“每次都必须重新读取变量”。 变量值可能是**外部因素改变**的（如硬件，另外线程或中断服务程序）
+
+```C
+volatile int falg;
+
+volatile unsigned int *p = (unsigned int *)0x40021000; //常用于寄存器访问
+
+const volatile int timer_count; //可被中断改变但不允许代码写
+
+```
+
+
 
 
 

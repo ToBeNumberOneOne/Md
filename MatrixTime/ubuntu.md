@@ -41,6 +41,8 @@ drwxr-xr-x 1 missing  users  4096 Jun 15  2019 missing
 
 还可以使用`>>`向文件追加内容，使用管道`|`更好的利用文件重定向
 
+`<>` 读写模式打开文件 相当于 `open(file, O_RDWR)`
+
 管道符
 - | 管道符，将前一个命令的输出作为下一个命令的输入
 - history | grep *** 搜索历史指令

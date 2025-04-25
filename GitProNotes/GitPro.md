@@ -13,6 +13,8 @@ git clean -fd # 强制 目录 永久删除未跟踪的文件
 
 git reset HEAD filename # 撤销暂存的文件
 
+git rebase -i HEAD~5 # 合并多个提交为1个提交
+
 ```
 
 # Git入门
