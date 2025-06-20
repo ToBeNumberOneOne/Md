@@ -187,7 +187,7 @@ dpkg -l | grep vncserver # 查找安装软件及版本
 
 常用指令
 
-- conda env list 列出环境
+- yy env list 列出环境
 - conda activate base 激活环境
 - conda env export --name my_env > environment.yml 导出环境
 - conda env create -f environment.yml 创建环境
